@@ -9,9 +9,9 @@ In Toit, when you write `sleep --ms=1_000`, the processor remains active.  To ac
 A useful reference for all things MQTT is [Practical MQTT with Steve](http://www.steves-internet-guide.com/)
 
 In this show and tell, 3 features are demonstrated:  
-  - an application to monitor a BME280 sensor, deep_sleeping most of the time
+  - an application to monitor a BME280 sensor, deep_sleeping most of the time to conserve power
+  - a very simple MQTT-SN client, a protocol designed for sleepy devices
   - in a development scenario, how to keep the connection to Jaguar responsive
-  - a very simple MQTT-SN client
 
 The code is just proof-of-concept and not production ready.
 
