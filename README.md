@@ -20,6 +20,17 @@ The code is just proof-of-concept and not production ready.
 
 The application looks 'normal', other than the last expression `esp32.deep_sleep (Duration --m=15)`.  Rather than the application terminating after the last expression is evaluated, the ESP32 enters deep sleep for at most 15 minutes, after which the application is restarted from the beginning.  No program state is carried to the next invocation, unless explicitly stashed in say [FlashStorage](https://libs.toit.io/device/class-FlashStore).
 
+## A very simple MQTT-SN client
+
+Rather than writing a complete MQTT-SN client, I took advantage of **Section 6.8 Publish with QoS Level -1** (aka QoS3) of the specification:
+```
+This feature is defined for very simple client implementations which do not support any other features except this one.  
+There is no connection setup nor tear down, no registration nor subscription.  
+The client just sends its PUBLISH messages to a GW (whose address is known a-priori by the client) and forgets them.  
+It does not care whether the GW address is correct, whether the GW is alive, or whether the messages arrive at the GW.
+```
+This allowed for a tiny client, that could simply report the BME280 temperature, humidity and pressure values.  Payloads lengths are restricted by UDP packet size, so if you experiment with this sample, beware.  A short sleep is inserted between the last PUBLISH and closing the client, as I noticed the last message was not delivered to the server without it, but I did not spend a lot of time tuning/debugging this.
+
 ## In development, working with Jaguar and sleepy devices
 
 When the ESP32 enters deep_sleep, it is no longer responsive to the Jaguar CLI.  This is a real nuisance, especially if your code executes quickly, you lose CLI access to the target device.  (You can recover by re-flashing the device, explicitly nominating the port, like `jag flash --port /dev/ttyUSB0`)
@@ -30,14 +41,6 @@ Finally, as pointed out in a Discord [thread](https://discordapp.com/channels/91
 ```
 jag container install sleeper sleepy_sensor.toit'
 ```
-
-## A very simple MQTT-SN client
-
-Rather than writing a complete MQTT-SN client, I took advantage of **Section 6.8 Publish with QoS Level -1** (aka QoS3) of the specification:
-```
-This feature is defined for very simple client implementations which do not support any other features except this one. There is no connection setup nor tear down, no registration nor subscription. The client just sends its PUBLISH messages to a GW (whose address is known a-priori by the client) and forgets them. It does not care whether the GW address is correct, whether the GW is alive, or whether the messages arrive at the GW.
-```
-This allowed for a tiny client, that could simply report the BME280 temperature, humidity and pressure values.  Payloads lengths are restricted by UDP packet size, so if you experiment with this sample, beware.  A short sleep is inserted between the last PUBLISH and closing the client, as I noticed the last message was not delivered to the server without it, but I did not spend a lot of time tuning/debugging this.
 
 # Setup and test
 
@@ -88,7 +91,7 @@ The following was tested on an Ubuntu 20.04 desktop running Jaguar v1.7.1, commu
     ``` 
     showing the broker receiving the PUBLSIH and echoing it to the subscriber
 
-    in the subscriber terminal, you should see `12.4`
+    in the subscriber terminal, you should see `12.4`  
     Using known good tooling, you have subscribed to and published a message.
 
 6) In the `sleepy_sensor` directory, using the Jaguar CLI run `jag flash` to install the Jaguar client on the target
@@ -135,7 +138,7 @@ The following was tested on an Ubuntu 20.04 desktop running Jaguar v1.7.1, commu
     20221013 213624.810 4 192.168.0.245:53707  <- MQTT-S PUBLISH msgid: 0 qos: -1 retained: 0
 
     ```
-    which is the three messages published to the broker, one of which `t_`is echoed to the subscriber.
+    which is the three messages published to the broker, one of which the topic `t_`is echoed to the subscriber.
     In the subscriber window, 4) above, you should see the actual temperature.
 
 11) Then periodically as the device target exits deep_sleep, in the jag monitor, 7) above, you should see:
@@ -179,7 +182,7 @@ The following was tested on an Ubuntu 20.04 desktop running Jaguar v1.7.1, commu
     ```
     The target device is in deep_sleep and thus un-responsive to network traffic.
 
-13) The gpio trigger is leveraged to wake the application, by raising pin 32 to rail rather than ground. The test on `esp32.wakeup_cause` on line 34, rather than measuring the BME280, simply sleeps, giving the Jaguar CLI access to the target.
+13) The gpio trigger is leveraged to wake the application, by raising pin 32 to rail rather than ground. The test on `esp32.wakeup_cause` on line 34, rather than measuring the BME280, simply sleeps, giving the Jaguar CLI a window to access the target.
     ```
     ets Jul 29 2019 12:21:46
 
