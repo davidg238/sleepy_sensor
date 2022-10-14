@@ -4,7 +4,7 @@ If you have a sensor which is to be monitored by a battery powered device, power
 
 In Toit, when you write `sleep --ms=1_000`, the processor remains active.  To actually save power, it is necessary to call `deep_sleep duration/Duration`, part of the [esp32](https://github.com/toitlang/toit/blob/master/lib/esp32.toit) library.  This puts the ESP32 into deep sleep mode, saving several orders of magnitude of current consumption, but pausing program execution and severing any open communications links.
 
-[MQTT](https://mqtt.org/) is a popular communications protocol for reporting data from device to server, and is thus supported in the Toit library [mqtt](https://github.com/toitware/mqtt) and by the major cloud vendors. MQTT relies upon a connected transport, so to address sleeping nodes [MQTT-SN](https://www.oasis-open.org/committees/download.php/66091/MQTT-SN_spec_v1.2.pdf) 'MQTT For Sensor Networks' was developed. MQTT-SN supports non-connected transports and limited channel bandwidth. As the ESP32 in this example uses WiFi, channel bandwidth is not an issue, but being able to run on UDP, allows the device to deep sleep. MQTT-SN relies upon a gateway, to translate the MQTT-SN messges to MQTT.  
+[MQTT](https://mqtt.org/) is a popular communications protocol for reporting data from device to server, and is thus supported in the Toit library [mqtt](https://github.com/toitware/mqtt) and by the major cloud vendors. MQTT relies upon a connected transport, so to address sleeping nodes 'MQTT For Sensor Networks' [MQTT-SN](https://www.oasis-open.org/committees/download.php/66091/MQTT-SN_spec_v1.2.pdf) was developed. MQTT-SN supports non-connected transports and limited channel bandwidth. As the ESP32 in this example uses WiFi, channel bandwidth is not an issue, but being able to run on UDP, allows the device to deep sleep. MQTT-SN relies upon a gateway, to translate the MQTT-SN messges to MQTT.  
 
 A useful reference for all things MQTT is [Practical MQTT with Steve](http://www.steves-internet-guide.com/)
 
@@ -18,7 +18,7 @@ The code is just proof-of-concept and not production ready.
 
 ## The application
 
-The application looks 'normal', other than the last expression `esp32.deep_sleep (Duration --m=15)`.  Rather than the application terminating after the last expression is evaluated, the ESP32 enters deep sleep for at most 15 minutes, after which the application is restarted from the beginning.  No program state is carried to the next invocation, unless explicitly stashed in say [FlashStorage](https://libs.toit.io/device/class-FlashStore).
+The application looks 'normal', other than the last expression `esp32.deep_sleep (Duration --m=15)`.  Rather than the application terminating after the last expression is evaluated, the ESP32 enters deep sleep for (at most) the duration, after which the application is restarted from the beginning.  No program state is carried to the next invocation, unless explicitly stashed in say [FlashStorage](https://libs.toit.io/device/class-FlashStore).
 
 ## A very simple MQTT-SN client
 
@@ -44,64 +44,67 @@ jag container install sleeper sleepy_sensor.toit'
 
 # Setup and test
 
-The following was tested on an Ubuntu 20.04 desktop running Jaguar v1.7.1, communicating with an [ESP32 Feather](https://www.ezsbc.com/product/esp32-feather/), wired to a BME280 and a trigger input on pin 32.
+The following was tested on an Ubuntu 20.04 desktop running Jaguar v1.7.1, communicating with an [ESP32 Feather](https://www.ezsbc.com/product/esp32-feather/), wired to a BME280 and a trigger input on pin 32.  
+### Setup and test MQTT-SN
 
 1. On the desktop, download and make [Really Small Message Broker](https://github.com/eclipse/mosquitto.rsmb).  On an IPv4 network, as Toit is of this writing, the `broker.config` might look like:
     ```
-    trace_output protocol
+      trace_output protocol
 
-    # normal MQTT listener
-    listener 1883 INADDR_ANY
+      # normal MQTT listener
+      listener 1883 INADDR_ANY
 
-    # MQTT-S listener
-    listener 1885 INADDR_ANY mqtts
+      # MQTT-S listener
+      listener 1885 INADDR_ANY mqtts
 
-    # optional multicast groups to listen on
-    multicast_groups 224.0.18.83
+      # optional multicast groups to listen on
+      # multicast_groups 224.0.18.83
 
-    #This will advertise the Gateway address to clients
-    # optional advertise packets parameters: address, interval, gateway_id
-    advertise 225.0.18.83:1885 30 33
+      #This will advertise the Gateway address to clients
+      # optional advertise packets parameters: address, interval, gateway_id
+      # advertise 225.0.18.83:1885 30 33
     ```
-    As noted for simplicity, copy the following files to a new directory:
+    As noted in the **rsmb** build notes, create a rsmb execution directory, with the following files:
     - broker (the broker executable)
     - broker.config (as above)
     - broker_mqtts (the MQTT-SN gateway executable)
     - Message.1.3.0.2
 
 
-2) Start the gateway with `./broker_mqtts broker.config`
+2) Open a **gateway** terminal window and start the rsmb SN gateway with `./broker_mqtts broker.config`
 3) Download and make [MQTT-SN-Tools](https://github.com/njh/mqtt-sn-tools)
-4) To begin testing your setup, open a new terminal window in the `mqtt-sn-tools` directory, and execute
+4) To begin testing your setup, open a **subscriber** terminal window in the `mqtt-sn-tools` directory, and execute
     ```
     ./mqtt-sn-sub -t t_ -p 1885
     ```
     which subscribes to messages on topic `t_` on the mqtt-sn gateway at localhost:1885
-4) Open another terminal window in the `mqtt-sn-tools` directory and execute
+4) Open a **publisher** terminal window in the `mqtt-sn-tools` directory and execute
     ```
     ./mqtt-sn-pub -p 1885 -t t_ -q -1 -m 12.4
     ```
     which publishes the message `12.4` on topic `t_` to the gateway on localhost:1885
-5) If your setup is working, you should see:  
+5) If your setup is working, you should see in the **gateway** terminal:  
 
-    in the broker log
     ```
     20221013 210534.358 4 127.0.0.1:35065  <- MQTT-S PUBLISH msgid: 0 qos: -1 retained: 0
     20221013 210534.358 4 127.0.0.1:38631 mqtt-sn-tools-9204 -> MQTT-S PUBLISH msgid: 0 qos: 0 retained: 0 (0)
     ``` 
     showing the broker receiving the PUBLSIH and echoing it to the subscriber
 
-    in the subscriber terminal, you should see `12.4`  
+    in the **subscriber** terminal, you should see `12.4`  
+
     Using known good tooling, you have subscribed to and published a message.
 
-6) In the `sleepy_sensor` directory, using the Jaguar CLI run `jag flash` to install the Jaguar client on the target
-7) Open another terminal window, Run `jag monitor`, to monitor the device target runtime log
-8) From the window in 6) above, run `jag container install sleeper sleepy_sensor.toit` to install the application container on the target.  The response should be like:
+### Test sleepy_sensor sending MQTT-SN messages
+
+6) In the `sleepy_sensor` directory, open a **JAG** terminal and run `jag flash` to install the Jaguar client on the target.
+7) Open a **monitor** terminal, run `jag scan`, then `jag monitor` to monitor the device target.
+8) In the **JAG** terminal, run `jag container install sleeper sleepy_sensor.toit` to install the application container on the target.  The response should be like:
     ```
         Installing container 'sleeper' from 'sleepy_sensor.toit' on 'illegal-sweet' ...
         Success: Sent 53KB code to 'illegal-sweet'
     ```
-9) In the monitor window, 7) above, when the runtime first boots, you should see:
+9) In the **monitor** terminal, when the runtime first boots, you should see:
     ```
     ets Jul 29 2019 12:21:46
 
@@ -130,7 +133,7 @@ The following was tested on an Ubuntu 20.04 desktop running Jaguar v1.7.1, commu
     ```
     showing the runtime booting, the application running and then entering deep sleep
 
-10) In the gateway log, 2) above, you should see:
+10) In the **gateway** terminal, you should periodically see:
     ```
     20221013 213624.809 4 192.168.0.245:53707  <- MQTT-S PUBLISH msgid: 0 qos: -1 retained: 0
     20221013 213624.810 4 127.0.0.1:38631 mqtt-sn-tools-9204 -> MQTT-S PUBLISH msgid: 0 qos: 0 retained: 0 (0)
@@ -139,9 +142,11 @@ The following was tested on an Ubuntu 20.04 desktop running Jaguar v1.7.1, commu
 
     ```
     which is the three messages published to the broker, one of which the topic `t_`is echoed to the subscriber.
-    In the subscriber window, 4) above, you should see the actual temperature.
+    In the **subscriber** terminal, you should see the actual temperature.
 
-11) Then periodically as the device target exits deep_sleep, in the jag monitor, 7) above, you should see:
+### Test working with Jaguar
+
+11) Then periodically as the device target exits deep_sleep, in the **monitor** terminal, you should see:
     ```
     ets Jul 29 2019 12:21:46
 
@@ -168,7 +173,7 @@ The following was tested on an Ubuntu 20.04 desktop running Jaguar v1.7.1, commu
     ```
     It is essential the WiFi be fully started before attempting the NTP correction or MQTT-SN publish, hence the 10s sleep on line 25 of `sleepy_sensor.toit`
 
-12) Now since the target device is mostly deep_sleeping, if you attempt to use the Jaguar CLI `jag container list`, it will fail with an error like:
+12) Now since the target device is mostly deep_sleeping, if in the **JAG** terminal you attempt to use the Jaguar CLI `jag container list`, it will fail with an error like:
     ```
     
     Error: Get "http://192.168.0.245:9000/list": dial tcp 192.168.0.245:9000: connect: no route to host
@@ -204,23 +209,19 @@ The following was tested on an Ubuntu 20.04 desktop running Jaguar v1.7.1, commu
     [jaguar] INFO: running Jaguar device 'illegal-sweet' (id: '671d7655-3a2e-4af7-9d46-5964ef15b14d') on 'http://192.168.0.245:9000'
     ntp: -365.861535ms ±137.612945ms
     Opening window for JAG connect .................
+
     ................. closing window for JAG connect
     Entering deep sleep for 60000ms
     ```
 
-    If you re-issue the list command while the window is open, it will now list the containers as:
+    When you see `Opening window for JAG connect ..` in the **monitor** terminal, you have a chance to interact with the target in the **JAG** terminal.  
+    If you re-issue the list command now, the containers will be listed:
     ```
     DEVICE          IMAGE                                  NAME
     illegal-sweet   5ae0a7dd-6276-5e0d-92cd-1473fa5890fa   sleeper
     illegal-sweet   453b7dcb-5794-5ec2-8875-b476e7de498f   jaguar
     ```
-    As soon as the window closes, the command will fail again.  
-    More likely, you would be in a edit/run cycle and would update the container with new code.
+    When you see `.. closing window for JAG connect`, the CLI is unavailable again and program execution has resumed.  
+    The gpio trigger thus enables an edit/run development cycle, with deep_sleep code.
 
-This is a proof-of-concept demonstration, to show:
-  - how to write an application which conserves power, via deep_sleep
-  - a communications protocol compatible with deep_sleep devices
-  - a development workflow for a deep_sleep device, with existing Jaguar v1.7.0 tooling
-
-The code is just proof-of-concept and not production ready.
 
