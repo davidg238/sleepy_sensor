@@ -1,0 +1,7 @@
+dependencies:
+  bme280:
+    url: github.com/toitware/bme280-driver
+    version: ^1.0.0
+  ntp:
+    url: github.com/toitlang/pkg-ntp
+    version: ^1.0.0
