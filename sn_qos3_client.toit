@@ -34,7 +34,11 @@ class SN_QoS3_Client:
     udp_socket = network.udp_open
     server_address = net.SocketAddress (net.IpAddress.parse gateway) port
 
-  publish topic/string data/string:
+
+  publish_string topic/string data/string -> none:
+    publish topic data.to_byte_array
+
+  publish topic/string data_b/ByteArray -> none:
     /* 
     This is only for the specialized PUBLISH with QoS -1 (aka 3), defined in Section 6.8 of the MQTT-SN spec:
       https://www.oasis-open.org/committees/document.php?document_id=66091&wg_abbrev=mqtt
@@ -50,7 +54,6 @@ class SN_QoS3_Client:
 
     if topic == "" or topic.size > 2: throw "INVALID_TOPIC"
     topic_b := topic.to_byte_array
-    data_b := data.to_byte_array
 
     buffer := bytes.Buffer
     min_size := data_b.size + 7
