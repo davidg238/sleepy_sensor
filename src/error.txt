@@ -1,0 +1,187 @@
+david@MSI-7D43:~/workspaceToit/sleepy_sensor$ jag monitor -a
+Starting serial monitor of port '/dev/ttyUSB0' ...
+.... ezSBC Feather 09c2e1345a79 started
+[wifi] DEBUG: connecting
+[wifi] DEBUG: connected
+[wifi] INFO: network address dynamically assigned through dhcp {ip: 192.168.0.244}
+[wifi] INFO: dns server address dynamically assigned through dhcp {ip: [192.168.0.1]}
+ntp: 465990h30m22.378568271s ±282.107715ms
+[wifi] DEBUG: closing
+.... ram: 1, msg: {"ti": "1677565824", "id": "09c2e1345a79", "v": 4.164}
+Entering deep sleep for 15000ms
+ets Jul 29 2019 12:21:46
+
+rst:0x5 (DEEPSLEEP_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:184
+load:0x40078000,len:12700
+ho 0 tail 12 room 4
+load:0x40080400,len:2916
+entry 0x400805c4
+E (53) psram: No PSRAM detected
+E (53) spiram: SPI RAM supported, but not found.
+[toit] INFO: starting <v2.0.0-alpha.55>
+.... ezSBC Feather 09c2e1345a79 started
+.... ram: 2, msg: {"ti": "1677565840", "id": "09c2e1345a79", "v": 4.172}
+Entering deep sleep for 15000ms
+ets Jul 29 2019 12:21:46
+
+rst:0x5 (DEEPSLEEP_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:184
+load:0x40078000,len:12700
+ho 0 tail 12 room 4
+load:0x40080400,len:2916
+entry 0x400805c4
+E (53) psram: No PSRAM detected
+E (53) spiram: SPI RAM supported, but not found.
+[toit] INFO: starting <v2.0.0-alpha.55>
+.... ezSBC Feather 09c2e1345a79 started
+.... ram: 3, msg: {"ti": "1677565855", "id": "09c2e1345a79", "v": 4.176}
+
+******************************************************************************
+Decoding by `jag`, device has version <2.0.0-alpha.55>
+******************************************************************************
+EXCEPTION error. 
+WRONG_OBJECT_TYPE
+  0: decode                    <sdk>/encoding/tison.toit:41:3
+  1: Bucket.get                <sdk>/system/storage.toit:84:29
+  2: Bucket.get                <sdk>/system/storage.toit:73:12
+  3: BufferStore.get_buff_     src/admin.toit:24:22
+  4: BufferStore.size          src/admin.toit:37:12
+  5: monitor_tphv              src/sleepy_sensor.toit:58:23
+  6: main                      src/sleepy_sensor.toit:36:5
+******************************************************************************
+
+Entering deep sleep for 50ms
+ets Jul 29 2019 12:21:46
+
+rst:0x5 (DEEPSLEEP_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:184
+load:0x40078000,len:12700
+ho 0 tail 12 room 4
+load:0x40080400,len:2916
+entry 0x400805c4
+E (53) psram: No PSRAM detected
+E (53) spiram: SPI RAM supported, but not found.
+[toit] INFO: starting <v2.0.0-alpha.55>
+.... ezSBC Feather 09c2e1345a79 started
+.... ram: 4, msg: {"ti": "1677565855", "id": "09c2e1345a79", "v": 4.176}
+
+******************************************************************************
+Decoding by `jag`, device has version <2.0.0-alpha.55>
+******************************************************************************
+EXCEPTION error. 
+WRONG_OBJECT_TYPE
+  0: decode                    <sdk>/encoding/tison.toit:41:3
+  1: Bucket.get                <sdk>/system/storage.toit:84:29
+  2: Bucket.get                <sdk>/system/storage.toit:73:12
+  3: BufferStore.get_buff_     src/admin.toit:24:22
+  4: BufferStore.size          src/admin.toit:37:12
+  5: monitor_tphv              src/sleepy_sensor.toit:58:23
+  6: main                      src/sleepy_sensor.toit:36:5
+******************************************************************************
+
+Entering deep sleep for 50ms
+ets Jul 29 2019 12:21:46
+
+rst:0x5 (DEEPSLEEP_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:184
+load:0x40078000,len:12700
+ho 0 tail 12 room 4
+load:0x40080400,len:2916
+entry 0x400805c4
+E (53) psram: No PSRAM detected
+E (53) spiram: SPI RAM supported, but not found.
+[toit] INFO: starting <v2.0.0-alpha.55>
+.... ezSBC Feather 09c2e1345a79 started
+.... ram: 5, msg: {"ti": "1677565856", "id": "09c2e1345a79", "v": 4.172}
+
+******************************************************************************
+Decoding by `jag`, device has version <2.0.0-alpha.55>
+******************************************************************************
+EXCEPTION error. 
+WRONG_OBJECT_TYPE
+  0: decode                    <sdk>/encoding/tison.toit:41:3
+  1: Bucket.get                <sdk>/system/storage.toit:84:29
+  2: Bucket.get                <sdk>/system/storage.toit:73:12
+  3: BufferStore.get_buff_     src/admin.toit:24:22
+  4: BufferStore.size          src/admin.toit:37:12
+  5: monitor_tphv              src/sleepy_sensor.toit:58:23
+  6: main                      src/sleepy_sensor.toit:36:5
+******************************************************************************
+
+Entering deep sleep for 50ms
+ets Jul 29 2019 12:21:46
+
+rst:0x5 (DEEPSLEEP_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:184
+load:0x40078000,len:12700
+ho 0 tail 12 room 4
+load:0x40080400,len:2916
+entry 0x400805c4
+E (53) psram: No PSRAM detected
+E (53) spiram: SPI RAM supported, but not found.
+[toit] INFO: starting <v2.0.0-alpha.55>
+.... ezSBC Feather 09c2e1345a79 started
+.... ram: 6, msg: {"ti": "1677565856", "id": "09c2e1345a79", "v": 4.172}
+
+******************************************************************************
+Decoding by `jag`, device has version <2.0.0-alpha.55>
+******************************************************************************
+EXCEPTION error. 
+WRONG_OBJECT_TYPE
+  0: decode                    <sdk>/encoding/tison.toit:41:3
+  1: Bucket.get                <sdk>/system/storage.toit:84:29
+  2: Bucket.get                <sdk>/system/storage.toit:73:12
+  3: BufferStore.get_buff_     src/admin.toit:24:22
+  4: BufferStore.size          src/admin.toit:37:12
+  5: monitor_tphv              src/sleepy_sensor.toit:58:23
+  6: main                      src/sleepy_sensor.toit:36:5
+******************************************************************************
+
+Entering deep sleep for 50ms
+ets Jul 29 2019 12:21:46
+
+rst:0x5 (DEEPSLEEP_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:184
+load:0x40078000,len:12700
+ho 0 tail 12 room 4
+load:0x40080400,len:2916
+entry 0x400805c4
+E (53) psram: No PSRAM detected
+E (53) spiram: SPI RAM supported, but not found.
+[toit] INFO: starting <v2.0.0-alpha.55>
+.... ezSBC Feather 09c2e1345a79 started
+.... ram: 7, msg: {"ti": "1677565856", "id": "09c2e1345a79", "v": 4.174}
+
+******************************************************************************
+Decoding by `jag`, device has version <2.0.0-alpha.55>
+******************************************************************************
+EXCEPTION error. 
+WRONG_OBJECT_TYPE
+  0: decode                    <sdk>/encoding/tison.toit:41:3
+  1: Bucket.get                <sdk>/system/storage.toit:84:29
+  2: Bucket.get                <sdk>/system/storage.toit:73:12
+  3: BufferStore.get_buff_     src/admin.toit:24:22
+  4: BufferStore.size          src/admin.toit:37:12
+  5: monitor_tphv              src/sleepy_sensor.toit:58:23
+  6: main                      src/sleepy_sensor.toit:36:5
+******************************************************************************
+

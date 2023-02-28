@@ -33,8 +33,10 @@ main:
     print ".... exiting"
     return 
   else:
-    monitor_tphv
-    esp32.deep_sleep (Duration --s=15)
+    while true:
+      monitor_tphv
+      sleep --ms=15_000
+    // esp32.deep_sleep (Duration --s=15)
 
 
 /*
@@ -51,7 +53,7 @@ set_time_once:
 monitor_tphv -> none:
 //  bme := bme280.Driver (board.add_i2c_device 0x77)
 //  message ::= "{\"ti\": \"$Time.now.s_since_epoch\", \"id\": \"$board.short_id\", \"t\": $(%.1f bme.read_temperature), \"h\": $(%.1f bme.read_humidity), \"p\": $(%.1f bme.read_pressure/100), \"v\": $(%.3f board.battery_voltage)}"
-  message ::= "{\"ti\": \"$Time.now.s_since_epoch\", \"id\": \"$board.short_id\", \"v\": $(%.3f board.battery_voltage)}"
+  message ::= "{\"ti\": $Time.now.s_since_epoch, \"id\": \"$board.short_id\", \"v\": $(%.3f board.battery_voltage)}"
   admin.BufferStore.add message
   print ".... ram: $admin.BufferStore.size, msg: $message"
   

@@ -9,7 +9,7 @@ import system.storage as storage
 GATEWAY ::= "192.168.0.130"  // Substitute with your MQTT-SN gateway.
 
 STORE_     ::= storage.Bucket.open --ram   "/admin" // Persists between reboots.
-// STORE_  ::= storage.Bucket.open --flash "/admin" // Persists between reboots and power cycles.
+//STORE_  ::= storage.Bucket.open --flash "/admin" // Persists between reboots and power cycles.
 
 reboot -> none:
   esp32.deep_sleep (Duration --ms=10)
