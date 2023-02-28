@@ -37,9 +37,9 @@ When the ESP32 enters deep_sleep, it is no longer responsive to the Jaguar CLI. 
 
 Assuming the development target is 'within reach', an alternative is to dedicate a gpio to a wake-on-pin [trigger](https://github.com/toitlang/toit/blob/master/examples/triggers/gpio.toit). A test on `esp32.wakeup_cause` is used to determine the reason for the device coming out of deep_sleep, in this case either the deep_sleep duration timer expiring or wake-on-pin trigger.  If the latter, simply sleep the device for a period, to give the Jaguar CLI time to connect.  I chose one minute as a relaxed window to connect, however 10 seconds is likely the minimum to allow WiFi to start and the Jaguar client on the target be responsive to CLI commands.
 
-Finally, as pointed out in a Discord [thread](https://discordapp.com/channels/918498540232253480/1027095521074090034), 'Programs that should survive a reboot or deep sleep need to be installed as a container:'
+Finally, as pointed out in a Discord [thread](https://discordapp.com/channels/918498540232253480/1027095521074090034), 'Programs that should survive a reboot or deep sleep need to be installed as a container:
 ```
-jag container install sleeper sleepy_sensor.toit'
+jag container install sleeper sleepy_sensor.toit
 ```
 
 # Setup and test
