@@ -39,5 +39,5 @@ class BufferStore:
   static remove_first -> any:
     buffer := get_buff_
     entry := buffer.first
-    STORE_["buffer"] = buffer[1..]
+    STORE_["buffer"] = buffer[1..].copy
     return entry

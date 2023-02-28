@@ -1,24 +1,18 @@
 import esp32
 import system.storage as storage
-import .ezsbc
 
-import .admin
-
-board := ESP32Feather
+import encoding.tison
 
 main:
 
   print "starting"
   sleepy := 15
 
-  board.on
-  // If the wakeup because of hardware pin, exit.
-  if esp32.wakeup_cause == esp32.WAKEUP_EXT1:
-    print ".... exiting, you have $sleepy seconds to uninstall the container! "
-    return 
 //  val := Time.now.s_since_epoch
 
   voltage := 0.0
+  my_buffer := []
+
 
   while true:
     // val := "{\"ti\": \"$Time.now.s_since_epoch\"}"
@@ -37,16 +31,17 @@ main:
     // voltage = board.battery_voltage
     // val ::= "{\"ti\": $Time.now.s_since_epoch, \"v\": $voltage}"
 
+    my_buffer.add (tison.encode val)
+    print "stored $val, size now $my_buffer.size"
 
-    BufferStore.add val
-
-    print "stored $val, size now $BufferStore.size"
-
-    if BufferStore.size >= 10:
+    if my_buffer.size >= 5:
       print "buffer full, emptying"
-      while BufferStore.size > 0:
-        print "data: $BufferStore.remove_first"
-      print "buffer emptied, size now $BufferStore.size"
+      entry := null
+      while my_buffer.size > 0:
+        entry = my_buffer.first
+        print "data: $entry"
+        my_buffer = my_buffer[1..].copy
+      print "buffer emptied, size now $my_buffer.size"
 
     sleep --ms=5_000
 
