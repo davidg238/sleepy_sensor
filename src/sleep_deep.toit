@@ -11,7 +11,7 @@ main:
   print "starting"
 
   val := "{\"ti\": \"$Time.now.s_since_epoch\"}"
-  deque := MiniStore "deep"
+  deque := MiniStore "lite"
 
   deque.add val
 

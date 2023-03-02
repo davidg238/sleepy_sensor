@@ -1,5 +1,5 @@
-import .admin as admin
+import .admin
 
 main:
-  admin.BufferStore.clear
-  print "cleared, size now $admin.BufferStore.size"
+  buffer := MiniStore "lite"
+  print "cleared, size now $buffer.size"

@@ -22,7 +22,7 @@ class MiniStore:
     buffer_.get name --if_absent= (: buffer_[name] = [])
 
   add entry/any -> none:
-    buffer := List.from buffer_[name]  // Create a `List`, since tison returns an Array_, which is non-growable.
+    buffer := List.from buffer_[name]
     buffer.add entry
     buffer_[name] = buffer
 

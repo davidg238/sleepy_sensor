@@ -22,4 +22,4 @@ main:
         print "data: $deque.remove_first"
       print "buffer emptied, size now $deque.size"
 
-    sleep (Duration --s=15)
+    sleep (Duration --s=5)
