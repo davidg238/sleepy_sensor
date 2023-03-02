@@ -22,27 +22,21 @@ Refer to:
 */
 
 board := ESP32Feather
+message := ""
 
 main:
 
   board.on
-  set_time_once
+//  set_time_once
 
-  // If the wakeup because of hardware pin, exit.
-  if esp32.wakeup_cause == esp32.WAKEUP_EXT1:
-    print ".... exiting"
-    return 
-  else:
-    while true:
-      monitor_tphv
-      sleep --ms=15_000
-    // esp32.deep_sleep (Duration --s=15)
+  monitor_tphv
+  esp32.deep_sleep (Duration --s=15)
 
 
 /*
 Hack. Relies upon storage not existing, the very first time program runs.
-The timestamp is (should be) right on the first data batch, since usually
-time is synced at the end of data transmission.
+The timestamp should be right on the first data batch.
+Normally is synced at the end of data transmission.
 */
 set_time_once:
   if not admin.BufferStore.exists:
@@ -51,9 +45,8 @@ set_time_once:
       board.network_off
 
 monitor_tphv -> none:
-//  bme := bme280.Driver (board.add_i2c_device 0x77)
-//  message ::= "{\"ti\": \"$Time.now.s_since_epoch\", \"id\": \"$board.short_id\", \"t\": $(%.1f bme.read_temperature), \"h\": $(%.1f bme.read_humidity), \"p\": $(%.1f bme.read_pressure/100), \"v\": $(%.3f board.battery_voltage)}"
-  message ::= "{\"ti\": $Time.now.s_since_epoch, \"id\": \"$board.short_id\", \"v\": $(%.3f board.battery_voltage)}"
+  bme := bme280.Driver (board.add_i2c_device 0x77)
+  message = "{\"ti\": $Time.now.s_since_epoch, \"id\": \"$board.short_id\", \"t\": $(%.1f bme.read_temperature), \"h\": $(%.1f bme.read_humidity), \"p\": $(%.1f bme.read_pressure/100), \"v\": $(%.3f board.battery_voltage)}"
   admin.BufferStore.add message
   print ".... ram: $admin.BufferStore.size, msg: $message"
   

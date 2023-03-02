@@ -34,7 +34,7 @@ class ESP32Feather:
       --sda=gpio.Pin 21
       --scl=gpio.Pin 22
     
-    init_wakeup_pin
+    // init_wakeup_pin
     battery_sense_off
     print ".... ezSBC Feather $short_id started"
 
