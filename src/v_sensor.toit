@@ -19,6 +19,7 @@ Refer to:
 */
 
 // Transmit data after each measurement.
+// Used to measure power consumptions on EZSBC Feather.
 
 GATEWAY ::= "192.168.0.130"  // Substitute with your MQTT-SN gateway
 

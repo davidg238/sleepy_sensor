@@ -6,23 +6,23 @@ import device
 import esp32
 import system.storage as storage
 
-GATEWAY ::= "192.168.0.130"  // Substitute with your MQTT-SN gateway.
+GATEWAY ::= "192.168.0.167"  // Substitute with your MQTT-SN gateway.
 
 reboot -> none:
   esp32.deep_sleep (Duration --ms=10)
 
-
+// Toy buffer for demo purposes.
 class MiniStore:
 
   buffer_/storage.Bucket
   name /string
 
   constructor .name:
-    buffer_ = storage.Bucket.open --flash "/admin"
-    buffer_.get name --if_absent= (: buffer_[name] = [])
+    buffer_ = storage.Bucket.open --ram "/admin"
+    buffer_.get name --init= : []
 
   add entry/any -> none:
-    buffer := List.from buffer_[name]
+    buffer := List.from buffer_[name] // tison returns a non-growable collection
     buffer.add entry
     buffer_[name] = buffer
 

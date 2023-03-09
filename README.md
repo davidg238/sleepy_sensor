@@ -33,6 +33,8 @@ This allowed for a tiny client, that could simply report the BME280 temperature,
 
 ## In development, working with Jaguar and sleepy devices
 
+Referencing v1.0 code:
+
 When the ESP32 enters deep_sleep, it is no longer responsive to the Jaguar CLI.  This is a real nuisance, especially if your code executes quickly, you lose CLI access to the target device.  (You can recover by re-flashing the device, explicitly nominating the port, like `jag flash --port /dev/ttyUSB0`)
 
 Assuming the development target is 'within reach', an alternative is to dedicate a gpio to a wake-on-pin [trigger](https://github.com/toitlang/toit/blob/master/examples/triggers/gpio.toit). A test on `esp32.wakeup_cause` is used to determine the reason for the device coming out of deep_sleep, in this case either the deep_sleep duration timer expiring or wake-on-pin trigger.  If the latter, simply sleep the device for a period, to give the Jaguar CLI time to connect.  I chose one minute as a relaxed window to connect, however 10 seconds is likely the minimum to allow WiFi to start and the Jaguar client on the target be responsive to CLI commands.
@@ -41,6 +43,13 @@ Finally, as pointed out in a Discord [thread](https://discordapp.com/channels/91
 ```
 jag container install sleeper sleepy_sensor.toit
 ```
+
+Referencing the v2.0 code:
+
+To minimize power comsumption the radio should only be enabled periodically, to report data.  To ensure the radio is only powered at intervals determined by user code, it is necessary to exclude JAG from the device, otherwise every time the device emerges from deep sleep, JAG will power the radio on and begin listening for console commands.
+
+A container
+
 
 # Setup and test
 

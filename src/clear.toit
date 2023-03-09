@@ -1,5 +1,8 @@
-import .admin
+import system.storage
+import esp32
+
+bucket := storage.Bucket.open --ram "/admin"
 
 main:
-  buffer := MiniStore "lite"
-  print "cleared, size now $buffer.size"
+
+  bucket.remove "mail"
