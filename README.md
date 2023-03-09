@@ -48,12 +48,20 @@ Referencing the v2.0 code:
 
 To minimize power comsumption the radio should only be enabled periodically, to report data.  To ensure the radio is only powered at intervals determined by user code, it is necessary to exclude JAG from the device, otherwise every time the device emerges from deep sleep, JAG will power the radio on and begin listening for console commands.
 
-A container
+Using the technique noted in [toit-zygote](https://github.com/kasperl/toit-zygote), run the Makefile
+```
+make firmware
+```
+then flash via a serial connection:
+```
+jag flash --exclude-jaguar build/firmware.envelope
+```
 
 
 # Setup and test
 
-The following was tested on an Ubuntu 20.04 desktop running Jaguar v1.7.1, communicating with an [ESP32 Feather](https://www.ezsbc.com/product/esp32-feather/), wired to a BME280 and a trigger input on pin 32.  
+The following was tested on an Ubuntu 20.04 desktop running Jaguar v1.7.1, communicating with an [ESP32 Feather](https://www.ezsbc.com/product/esp32-feather/), wired to a BME280 and a trigger input on pin 32.  (These detailed instructions are for v1.0.x of the software).  
+
 ### Setup and test MQTT-SN
 
 1. On the desktop, download and make [Really Small Message Broker](https://github.com/eclipse/mosquitto.rsmb).  On an IPv4 network, as Toit is of this writing, the `broker.config` might look like:
